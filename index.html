@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contact Info with Map</title>
+  <title>Contact Info with Fixed Location Map</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -47,36 +47,26 @@
     .location {
       margin-top: 15px;
       color: #444;
-    }
-
-    button {
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>Contact Info & Your Location</h1>
+    <h1>Contact Info & Location</h1>
 
     <div class="contact-info">
-      📞 Phone: +91-8123241101<br>
-      📧 Email: shubhaluxurypgforladies@gmail.com<br>
-      📍 Address: Bengaluru, Karnataka, India
+      📞 Phone: +91-9876543210<br>
+      📧 Email: contact@example.com<br>
+      📍 Address: Bangalore, Karnataka, India
     </div>
 
-    <button onclick="getLocation()">Show My Location on Map</button>
-
-    <div class="location" id="location">Click the button to load your location.</div>
+    <div class="location">
+      Fixed Coordinates: <br>
+      📍 Latitude: 12.994621<br>
+      📍 Longitude: 77.682780
+    </div>
 
     <div id="map"></div>
   </div>
@@ -85,43 +75,25 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    let map;
+    // Fixed coordinates
+    const lat = 12.994621;
+    const lon = 77.682780;
 
-    function getLocation() {
-      const locDiv = document.getElementById("location");
+    // Initialize the map
+    const map = L.map('map').setView([lat, lon], 15);
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            locDiv.innerHTML = `📍 Latitude: ${lat.toFixed(5)}, Longitude: ${lon.toFixed(5)}`;
+    // Add tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-            // Initialize or update the map
-            if (!map) {
-              map = L.map('map').setView([lat, lon], 13);
-
-              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-              }).addTo(map);
-            } else {
-              map.setView([lat, lon], 13);
-            }
-
-            // Add marker
-            L.marker([lat, lon]).addTo(map)
-              .bindPopup('📍 You are here!')
-              .openPopup();
-          },
-          (error) => {
-            locDiv.innerHTML = "❌ Error getting location: " + error.message;
-          }
-        );
-      } else {
-        locDiv.innerHTML = "❌ Geolocation is not supported by this browser.";
-      }
-    }
+    // Add marker
+    L.marker([lat, lon]).addTo(map)
+      .bindPopup('📍 Fixed Location')
+      .openPopup();
   </script>
 
 </body>
 </html>
+
+
